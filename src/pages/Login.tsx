@@ -9,7 +9,7 @@ const Login: FC = () => {
     }, [])
 
     return (
-        <div>Login</div>
+        <div>Login Page</div>
     )
 }
 

@@ -10,6 +10,9 @@ import {
 import App from './App';
 import { initializeApp } from 'firebase/app';
 import Login from './pages/Login';
+import TransactionPage from './pages/TransactionPage';
+import NewTransactionPage from './pages/NewTransactionPage';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 initializeApp({
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -18,20 +21,39 @@ initializeApp({
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />
+    element: <App />,
+    children: [
+      {
+        path: "/transactions",
+        Component: TransactionPage
+      },
+      {
+        path: "/transactions/add",
+        Component: NewTransactionPage
+      }
+    ]
   },
   {
     path: "/login",
-    element: <Login/>
+    element: <Login />
   }
 ]);
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+const queryClient = new QueryClient({
+  defaultOptions:{
+    queries:{
+      refetchOnWindowFocus: false
+    }
+  }
+})
 root.render(
   <React.StrictMode>
     <ChakraProvider>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
     </ChakraProvider>
   </React.StrictMode>
 );

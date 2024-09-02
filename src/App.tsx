@@ -1,19 +1,23 @@
 import React, { useEffect } from 'react';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { Outlet, useNavigate } from 'react-router-dom';
+import Page from './components/Page';
 
 const App: React.FC = () => {
 	const navigate = useNavigate();
 	useEffect(() => {
 		onAuthStateChanged(getAuth(), user => {
 			if(!user){
-				navigate("/login")
+				console.log("redirecting")
+				//navigate("/login")
 			}
 		})
 	}, [])
 
 	return (
-		<h1>hello</h1>
+		<Page>
+			<Outlet/>
+		</Page>
 	);
 }
 
