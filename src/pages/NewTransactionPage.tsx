@@ -1,13 +1,14 @@
-import { FC, useState } from "react";
+import { FC, useContext, useState } from "react";
 import Page from "../components/Page";
 import { Button, Checkbox, FormControl, FormLabel, HStack, Input, NumberInput, NumberInputField, Select, useToast, VStack } from "@chakra-ui/react";
 import { useQuery } from "react-query";
 import { createTransaction, getCategories } from "../services/data-service";
 import { ICategory, ISubCategory } from "../interface/ICategory";
+import { CategoriesContext } from "../contexts/categories-contexts";
 
 const NewTransactionPage: FC = () => {
     const toast = useToast()
-    const { data: categories } = useQuery('categories', getCategories)
+    const { categories } = useContext(CategoriesContext);
     const [type, setType] = useState('expense')
     const [amount, setAmount] = useState<string>('')
     const [selectedCategory, setSelectedCategory] = useState<ICategory | undefined>()
@@ -63,7 +64,7 @@ const NewTransactionPage: FC = () => {
 
     return (
         <Page>
-            <VStack px={10} spacing={5}>
+            <VStack mx={10} spacing={5}>
                 <FormControl isRequired>
                     <FormLabel>Transaction Type</FormLabel>
                     <Select onChange={(e) => setType(e.target.value)} value={type}>
@@ -77,7 +78,7 @@ const NewTransactionPage: FC = () => {
                         <Checkbox onChange={(e) => e.target.checked ? setProcessingFee(1.45) : setProcessingFee(undefined)} >Add processing fee 1.45%</Checkbox>
                     </HStack>
                     <NumberInput precision={2} value={amount} onChange={onAmountChange} min={0}>
-                        <NumberInputField  />
+                        <NumberInputField />
                     </NumberInput>
                 </FormControl>
                 <FormControl isRequired>

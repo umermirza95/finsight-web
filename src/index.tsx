@@ -13,6 +13,7 @@ import Login from './pages/Login';
 import TransactionPage from './pages/TransactionPage';
 import NewTransactionPage from './pages/NewTransactionPage';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { CategoriesContextProvider } from './contexts/categories-contexts';
 
 initializeApp({
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -42,8 +43,8 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 const queryClient = new QueryClient({
-  defaultOptions:{
-    queries:{
+  defaultOptions: {
+    queries: {
       refetchOnWindowFocus: false
     }
   }
@@ -52,7 +53,9 @@ root.render(
   <React.StrictMode>
     <ChakraProvider>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <CategoriesContextProvider>
+          <RouterProvider router={router} />
+        </CategoriesContextProvider>
       </QueryClientProvider>
     </ChakraProvider>
   </React.StrictMode>
