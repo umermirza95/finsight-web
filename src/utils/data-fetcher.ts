@@ -26,19 +26,21 @@ export async function POST(path: string, payload: any) {
     if (!token) {
         token = await getIdToken();
     }
-    const url = `${process.env.REACT_APP_API_URL}/${path}`
+    const url = `${process.env.REACT_APP_API_URL}${path}`
     console.log(`POST ${url}`)
     const request = await fetch(url, {
         method: 'POST',
         body: JSON.stringify(payload),
         headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${token}`,
+            'content-type': 'application/json'
         }
     })
     const response = await request.text()
     console.log(response)
     if (request.status >= 400) {
-        throw Error(response);
+        const errorData = JSON.parse(response);
+        throw Error(errorData.errors[0]);
     }
     return JSON.parse(response).data
 }

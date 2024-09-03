@@ -1,34 +1,64 @@
 import { FC, useState } from "react";
 import Page from "../components/Page";
-import { Box, FormControl, FormLabel, Input, NumberInput, NumberInputField, Select, VStack } from "@chakra-ui/react";
+import { Button, Checkbox, FormControl, FormLabel, HStack, Input, NumberInput, NumberInputField, Select, useToast, VStack } from "@chakra-ui/react";
 import { useQuery } from "react-query";
-import { getCategories } from "../services/data-service";
+import { createTransaction, getCategories } from "../services/data-service";
 import { ICategory, ISubCategory } from "../interface/ICategory";
 
 const NewTransactionPage: FC = () => {
+    const toast = useToast()
     const { data: categories } = useQuery('categories', getCategories)
     const [type, setType] = useState('expense')
-    const [amount, setAmount] = useState<number>()
+    const [amount, setAmount] = useState<string>('')
     const [selectedCategory, setSelectedCategory] = useState<ICategory | undefined>()
     const [selectedSubCategory, setSelectedSubCategory] = useState<ISubCategory | undefined>()
-    const [comment, setComment] = useState<string>()
+    const [comment, setComment] = useState<string>('')
     const [mode, setMode] = useState<string>('online')
     const [date, setDate] = useState(new Date())
+    const [processingFee, setProcessingFee] = useState<number>()
+    const [submitting, setSubmitting] = useState(false)
 
     const onCategoryChanged = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedCategory(categories?.find(c => c.id === event.target.value))
     }
 
     const onSubCategoryChanged = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedSubCategory(selectedCategory?.subCategories.find(c => c.id === event.target.value))
+        setSelectedSubCategory(selectedCategory?.subCategories?.find(c => c.id === event.target.value))
     }
 
     const onAmountChange = (strVal: string, numVal: number) => {
-        setAmount(numVal);
+        setAmount(strVal)
     }
 
     const onModeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setMode(event.target.value)
+    }
+
+    const submit = async () => {
+        setSubmitting(true);
+        const payload = {
+            type,
+            mode,
+            amount,
+            comment,
+            processingFeePercent: processingFee,
+            categoryId: selectedCategory?.id,
+            subCategoryId: selectedSubCategory?.id,
+            date: date.toISOString()
+        }
+        try {
+            await createTransaction(payload)
+        }
+        catch (error: any) {
+            toast({
+                title: 'Error!',
+                description: error.message,
+                status: 'error',
+                duration: 9000,
+                isClosable: true,
+            })
+        }
+        setSubmitting(false)
     }
 
     return (
@@ -42,9 +72,12 @@ const NewTransactionPage: FC = () => {
                     </Select>
                 </FormControl>
                 <FormControl isRequired>
-                    <FormLabel>Amount</FormLabel>
-                    <NumberInput value={amount} onChange={onAmountChange} min={0}>
-                        <NumberInputField />
+                    <HStack justify='space-between'>
+                        <FormLabel>Amount</FormLabel>
+                        <Checkbox onChange={(e) => e.target.checked ? setProcessingFee(1.45) : setProcessingFee(undefined)} >Add processing fee 1.45%</Checkbox>
+                    </HStack>
+                    <NumberInput precision={2} value={amount} onChange={onAmountChange} min={0}>
+                        <NumberInputField  />
                     </NumberInput>
                 </FormControl>
                 <FormControl isRequired>
@@ -58,7 +91,7 @@ const NewTransactionPage: FC = () => {
                     </Select>
                 </FormControl>
                 {
-                    !!selectedCategory?.subCategories.length &&
+                    !!selectedCategory?.subCategories?.length &&
                     <FormControl>
                         <FormLabel>Sub Category</FormLabel>
                         <Select placeholder='Select Sub Category' onChange={onSubCategoryChanged} value={selectedSubCategory ? selectedSubCategory.id : undefined}>
@@ -87,6 +120,9 @@ const NewTransactionPage: FC = () => {
                     <FormLabel>Date</FormLabel>
                     <Input onChange={(e) => setDate(new Date(e.target.value))} value={date.toISOString().split('T')[0]} type='date' />
                 </FormControl>
+                <Button isLoading={submitting} onClick={submit} w='100%' colorScheme='teal' variant='solid'>
+                    Submit
+                </Button>
             </VStack>
         </Page>
     )

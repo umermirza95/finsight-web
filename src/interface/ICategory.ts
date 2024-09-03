@@ -2,7 +2,7 @@ export interface ICategory {
     name: string,
     id: string
     type: string
-    subCategories: ISubCategory[]
+    subCategories?: ISubCategory[]
 
 }
 
