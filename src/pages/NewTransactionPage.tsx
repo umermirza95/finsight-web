@@ -64,7 +64,7 @@ const NewTransactionPage: FC = () => {
 
     return (
         <Page>
-            <VStack mx={10} spacing={5}>
+            <VStack mx='2' spacing={5}>
                 <FormControl isRequired>
                     <FormLabel>Transaction Type</FormLabel>
                     <Select onChange={(e) => setType(e.target.value)} value={type}>
