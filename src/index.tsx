@@ -14,6 +14,7 @@ import TransactionPage from './pages/TransactionPage';
 import NewTransactionPage from './pages/NewTransactionPage';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { CategoriesContextProvider } from './contexts/categories-contexts';
+import Dashboard from './pages/Dashboard';
 
 initializeApp({
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
+      {
+        path:"/",
+        Component: Dashboard
+      },
       {
         path: "/transactions",
         Component: TransactionPage

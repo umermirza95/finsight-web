@@ -6,7 +6,7 @@ interface props {
 }
 const Page: FC<props> = ({ children }) => {
     return (
-        <Box pt={4}  w='100vw'  minH='100vh'>
+        <Box py={2}  w='100vw'  minH='100vh'>
             {children}
         </Box>
     )

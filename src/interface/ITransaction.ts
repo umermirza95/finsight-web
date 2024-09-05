@@ -6,5 +6,5 @@ export interface ITransaction {
     comment?: string
     categoryId: string,
     subCategoryId?: string,
-    date: string
+    date: Date
 }
