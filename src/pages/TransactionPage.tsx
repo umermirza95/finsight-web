@@ -23,44 +23,26 @@ const TransactionPage: FC = () => {
     const totalExpenses = transactions.filter(t => t.type === 'expense').reduce((sum, transaction) => sum + transaction.amount, 0);
     const totalIncome = transactions.filter(t => t.type === 'income').reduce((sum, transaction) => sum + transaction.amount, 0);
     return (
-        <Page>
-            <Card mx='2'>
-                <CardHeader>
-                    <HStack justify='space-between'>
-                        <Heading size='lg'>Transactions</Heading>
-                        <Button size='sm' leftIcon={<SettingsIcon />} colorScheme='teal' variant='solid'>
-                            Filters
-                        </Button>
-                    </HStack>
-                </CardHeader>
+        <Card>
+            <CardHeader>
+                <HStack justify='flex-end'>
+                   
+                    <Button size='sm' leftIcon={<SettingsIcon />} colorScheme='teal' variant='solid'>
+                        Filters
+                    </Button>
+                </HStack>
+            </CardHeader>
 
-                <CardBody>
-                    <Stack divider={<StackDivider />} spacing='3'>
-                        <HStack justify='space-between'>
-                            <Box>
-                                <HStack>
-                                    <Text color='green'>Total Income</Text>
-                                    <TriangleDownIcon color='green' />
-                                </HStack>
-                                <Heading size='lg'>{`$${totalIncome} USD`}</Heading>
-                            </Box>
-                            <Box>
-                                <HStack>
-                                    <Text color='red'>Total Expense</Text>
-                                    <TriangleUpIcon color='red' />
-                                </HStack>
-                                <Heading size='lg'>{`$${totalExpenses} USD`}</Heading>
-                            </Box>
-                        </HStack>
-                        {
-                            transactions.map(transaction => (
-                                <TransactionItem key={transaction.id} transaction={transaction} />
-                            ))
-                        }
-                    </Stack>
-                </CardBody>
-            </Card>
-        </Page>
+            <CardBody>
+                <Stack divider={<StackDivider />} spacing='3'>
+                    {
+                        transactions.map(transaction => (
+                            <TransactionItem key={transaction.id} transaction={transaction} />
+                        ))
+                    }
+                </Stack>
+            </CardBody>
+        </Card>
     );
 }
 

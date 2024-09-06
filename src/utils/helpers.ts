@@ -1,4 +1,6 @@
-export const monthNamesShort=[
+import path from "path";
+
+export const monthNamesShort = [
     'Jan',
     'Feb',
     'Mar',
@@ -12,3 +14,16 @@ export const monthNamesShort=[
     'Nov',
     'Dec'
 ];
+
+export function pathNameToHeading(pathName: string): string {
+    switch (pathName) {
+        case '/':
+            return 'Dashboard'
+        case '/transactions':
+            return 'Transactions'
+        case '/transactions/add':
+            return 'Add Transaction'
+        default:
+            return ''
+    }
+}
