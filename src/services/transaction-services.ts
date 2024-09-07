@@ -18,7 +18,7 @@ export function getMonthlyAverageIncomeAndExpense(transactions: ITransaction[]):
     let totalIncome = 0;
     let totalExpense = 0;
     const currentMonth = (new Date()).getMonth()
-    const monthsPassed = currentMonth <= 1 ? 1 : currentMonth - 1;
+    const monthsPassed = currentMonth === 0 ? 1 : currentMonth;
     let validTransactions = transactions;
     if (currentMonth > 0) {
         validTransactions = transactions.filter(t => t.date.getMonth() < currentMonth)

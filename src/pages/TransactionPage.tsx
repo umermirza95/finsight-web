@@ -1,12 +1,14 @@
 import { FC, useEffect, useState } from "react";
-import Page from "../components/Page";
-import { Box, Button, Card, CardBody, CardHeader, Heading, HStack, Stack, StackDivider, Stat, StatHelpText, StatLabel, StatNumber, Text } from "@chakra-ui/react";
+import { Button, Card, CardBody, CardHeader, Heading, HStack, Stack, StackDivider} from "@chakra-ui/react";
 import { ITransaction } from "../interface/ITransaction";
 import { fetchTransactions } from "../services/data-service";
 import TransactionItem from "../components/TransactionItem";
-import { SettingsIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
+import { AddIcon, SettingsIcon } from "@chakra-ui/icons";
+import { useNavigate } from "react-router-dom";
+
 
 const TransactionPage: FC = () => {
+    const navigate = useNavigate();
     const [transactions, setTransactions] = useState<ITransaction[]>([])
 
     const getTransactions = async () => {
@@ -25,10 +27,12 @@ const TransactionPage: FC = () => {
     return (
         <Card>
             <CardHeader>
-                <HStack justify='flex-end'>
-                   
+                <HStack justify='space-between'>
                     <Button size='sm' leftIcon={<SettingsIcon />} colorScheme='teal' variant='solid'>
                         Filters
+                    </Button>
+                    <Button onClick={()=> navigate('/transactions/add')} size='sm' leftIcon={<AddIcon />} colorScheme='teal' variant='solid'>
+                        Create New
                     </Button>
                 </HStack>
             </CardHeader>
