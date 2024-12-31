@@ -14,7 +14,7 @@ const TransactionPage: FC = () => {
     const getTransactions = async () => {
         const currentDate = new Date();
         const firstOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-        const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+        const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0, 23, 59);
         setTransactions(await fetchTransactions(firstOfMonth, lastDayOfMonth))
     }
 
