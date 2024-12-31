@@ -16,7 +16,8 @@ const Dashboard: FC = () => {
     const loadTransactions = async () => {
         const date = new Date()
         const from = new Date(date.getFullYear(), 0, 1)
-        const to = new Date(date.getFullYear(), 12, 0)
+        const to = new Date(date.getFullYear(), 12, 0, 23, 59)
+        console.log(to);
         setTransactions(await fetchTransactions(from, to))
     }
 
