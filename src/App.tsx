@@ -39,7 +39,7 @@ const App: React.FC = () => {
 			templateColumns='repeat(12, 1fr)'
 		>
 			<Show above='lg'>
-				<GridItem minW='250px' rowSpan={11} colSpan={2} bg='#181818'>
+				<GridItem minW='250px' rowSpan={11} colSpan={2}>
 					<FSDrawer onClick={() => setIsOpen(false)} />
 				</GridItem>
 			</Show>
@@ -63,7 +63,7 @@ const App: React.FC = () => {
 				onClose={() => setIsOpen(false)}
 			>
 				<DrawerOverlay />
-				<DrawerContent bg='#181818'>
+				<DrawerContent>
 					<FSDrawer onClick={() => setIsOpen(false)} />
 				</DrawerContent>
 			</Drawer>
