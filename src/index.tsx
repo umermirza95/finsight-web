@@ -12,9 +12,10 @@ import { initializeApp } from 'firebase/app';
 import Login from './pages/Login';
 import TransactionPage from './pages/TransactionPage';
 import NewTransactionPage from './pages/NewTransactionPage';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from  '@tanstack/react-query';
 import { CategoriesContextProvider } from './contexts/categories-contexts';
 import Dashboard from './pages/Dashboard';
+import { ThemeContextProvider } from './contexts/theme-context';
 
 initializeApp({
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path:"/",
+        path: "/",
         Component: Dashboard
       },
       {
@@ -59,7 +60,9 @@ root.render(
     <ChakraProvider>
       <QueryClientProvider client={queryClient}>
         <CategoriesContextProvider>
-          <RouterProvider router={router} />
+          <ThemeContextProvider>
+            <RouterProvider router={router} />
+          </ThemeContextProvider>
         </CategoriesContextProvider>
       </QueryClientProvider>
     </ChakraProvider>

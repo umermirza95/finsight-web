@@ -1,7 +1,5 @@
 import { FC, useContext, useState } from "react";
-import Page from "../components/Page";
 import { Button, Checkbox, FormControl, FormLabel, HStack, Input, NumberInput, NumberInputField, Select, useToast, VStack } from "@chakra-ui/react";
-import { useQuery } from "react-query";
 import { createTransaction, getCategories } from "../services/data-service";
 import { ICategory, ISubCategory } from "../interface/ICategory";
 import { CategoriesContext } from "../contexts/categories-contexts";

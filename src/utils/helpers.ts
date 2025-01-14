@@ -27,3 +27,12 @@ export function pathNameToHeading(pathName: string): string {
             return ''
     }
 }
+
+export function getYearlySpan(year: number):{from: Date, to: Date}{
+    const from = new Date(year, 0, 1)
+    const to = new Date(year, 12, 0, 23, 59)
+    return{
+        from,
+        to
+    }
+}

@@ -5,7 +5,7 @@ export async function GET(path: string) {
     if (!token) {
         token = await getIdToken();
     }
-    const url = `${process.env.REACT_APP_API_URL}${path}`
+    const url = `${process.env.REACT_APP_API_URL}${path.replaceAll(':', '%3A')}`
     console.log(`GET ${url}`)
     const request = await fetch(url, {
         method: 'GET',
