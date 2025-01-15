@@ -1,5 +1,7 @@
+import { ICategory } from "../interface/ICategory"
 import { ITransaction } from "../interface/ITransaction"
 import { monthNamesShort } from "../utils/helpers"
+import { getCategoryById } from "./category-services"
 
 
 function groupTransactionsByMonths(transactions: ITransaction[]): Map<string, ITransaction[]> {
@@ -10,6 +12,18 @@ function groupTransactionsByMonths(transactions: ITransaction[]): Map<string, IT
             group.set(monthName, [])
         }
         group.get(monthName)?.push(transaction)
+    })
+    return group
+}
+
+function groupTransactionsByCategories(transactions: ITransaction[], categories: ICategory[]): Map<string, ITransaction[]> {
+    const group = new Map<string, ITransaction[]>()
+    transactions.forEach(transaction => {
+        const categoryName = getCategoryById(categories, transaction.categoryId)?.name ?? "uncategorized";
+        if (!group.has(categoryName)) {
+            group.set(categoryName, [])
+        }
+        group.get(categoryName)?.push(transaction)
     })
     return group
 }
@@ -31,6 +45,44 @@ export function getMonthlyAverageIncomeAndExpense(transactions: ITransaction[]):
         avergaeExpense,
         avergaeIncome
     }
+}
+
+export function getIncomeGroupedByCategory(transactions: ITransaction[], categories: ICategory[]): any[][]{
+    const group = groupTransactionsByCategories(transactions, categories)
+    const data: any[][] = []
+    Array.from(group.keys()).forEach(category => {
+        const row: any[] = []
+        row.push(category);
+        const totalIncome = group.get(category)
+            ?.filter(transaction => transaction.type === 'income')
+            .reduce((sum, transaction) => transaction.amount + sum, 0);
+        row.push(totalIncome)
+        data.push(row)
+    })
+    data.unshift([
+        'Categories',
+        'Total Income'
+    ])
+    return data
+}
+
+export function getExpenseGroupedByCategory(transactions: ITransaction[], categories: ICategory[]): any[][]{
+    const group = groupTransactionsByCategories(transactions, categories)
+    const data: any[][] = []
+    Array.from(group.keys()).forEach(category => {
+        const row: any[] = []
+        row.push(category);
+        const totalIncome = group.get(category)
+            ?.filter(transaction => transaction.type === 'expense')
+            .reduce((sum, transaction) => transaction.amount + sum, 0);
+        row.push(totalIncome)
+        data.push(row)
+    })
+    data.unshift([
+        'Categories',
+        'Total Expense'
+    ])
+    return data
 }
 
 
