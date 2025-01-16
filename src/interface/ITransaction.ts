@@ -1,6 +1,6 @@
 export interface ITransaction {
     id:string
-    type: string,
+    type: TransactionType,
     mode: string,
     amount: number,
     comment?: string
@@ -8,3 +8,9 @@ export interface ITransaction {
     subCategoryId?: string,
     date: Date
 }
+
+export type TransactionType = "income" | "expense"
+export enum TransactionTypeEnum {
+    income = "income",
+    expense = "expense"
+};

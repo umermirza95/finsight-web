@@ -47,7 +47,7 @@ export function getMonthlyAverageIncomeAndExpense(transactions: ITransaction[]):
     }
 }
 
-export function getIncomeGroupedByCategory(transactions: ITransaction[], categories: ICategory[]): any[][]{
+export function getIncomeGroupedByCategory(transactions: ITransaction[], categories: ICategory[]): any[][] {
     const group = groupTransactionsByCategories(transactions, categories)
     const data: any[][] = []
     Array.from(group.keys()).forEach(category => {
@@ -66,7 +66,7 @@ export function getIncomeGroupedByCategory(transactions: ITransaction[], categor
     return data
 }
 
-export function getExpenseGroupedByCategory(transactions: ITransaction[], categories: ICategory[]): any[][]{
+export function getExpenseGroupedByCategory(transactions: ITransaction[], categories: ICategory[]): any[][] {
     const group = groupTransactionsByCategories(transactions, categories)
     const data: any[][] = []
     Array.from(group.keys()).forEach(category => {
@@ -84,6 +84,12 @@ export function getExpenseGroupedByCategory(transactions: ITransaction[], catego
     ])
     return data
 }
+
+
+export function getTotal(transactions: ITransaction[], type: string): number {
+    return transactions.filter(t => t.type === type).reduce((sum, t) => t.amount + sum, 0);
+}
+
 
 
 export function getIncomeAndExpenseGroupedByMonth(transactions: ITransaction[]): any[][] {

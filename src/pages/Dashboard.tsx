@@ -1,12 +1,13 @@
 import { FC, useContext, useEffect, useState } from "react";
-import { Box, Card, CardBody, Grid, GridItem, HStack, Select } from "@chakra-ui/react";
+import { Box, Card, CardBody, Grid, GridItem, HStack, Select, Stat, StatArrow, StatHelpText, StatLabel, StatNumber } from "@chakra-ui/react";
 import { fetchTransactions, fetchYearlyTransactions, getCategories } from "../services/data-service";
 import Chart from "react-google-charts";
-import { ITransaction } from "../interface/ITransaction";
-import { getExpenseGroupedByCategory, getIncomeAndExpenseGroupedByMonth, getIncomeGroupedByCategory, getMonthlyAverageIncomeAndExpense } from "../services/transaction-services";
+import { ITransaction, TransactionTypeEnum } from "../interface/ITransaction";
+import { getExpenseGroupedByCategory, getIncomeAndExpenseGroupedByMonth, getIncomeGroupedByCategory, getMonthlyAverageIncomeAndExpense, getTotal } from "../services/transaction-services";
 import { ThemeContext } from "../contexts/theme-context";
 import { useQuery } from "@tanstack/react-query";
 import { CalendarIcon } from "@chakra-ui/icons";
+import { amountFormatter } from "../utils/helpers";
 
 const Dashboard: FC = () => {
     const { theme } = useContext(ThemeContext);
@@ -26,11 +27,54 @@ const Dashboard: FC = () => {
         <Box>
             <HStack w='100%' justifyContent='flex-end'>
                 <Select variant='filled' w='100px' fontWeight={700} icon={<CalendarIcon />} mb={4} value={year} onChange={(event) => setYear(parseInt(event.target.value))}>
+                <option value={2023}>2023</option>
                     <option value={2024}>2024</option>
                     <option value={2025}>2025</option>
                 </Select>
             </HStack>
             <Grid gap={4} templateColumns='repeat(12, 1fr)'>
+                <GridItem colSpan={[6, 6, 3]}>
+                    <Card >
+                        <CardBody pb={0} pt={2}>
+                            <Stat>
+                                <StatLabel>Total Income</StatLabel>
+                                <StatNumber>{amountFormatter(getTotal(transactions ?? [], TransactionTypeEnum.income))}</StatNumber>
+                                <StatHelpText>
+                                    <StatArrow type='increase' />
+                                    23.36%
+                                </StatHelpText>
+                            </Stat>
+                        </CardBody>
+                    </Card>
+                </GridItem>
+                <GridItem colSpan={[6, 6, 3]}>
+                    <Card>
+                        <CardBody pb={0} pt={2}>
+                            <Stat>
+                                <StatLabel>Total Expense</StatLabel>
+                                <StatNumber>{amountFormatter(getTotal(transactions ?? [], TransactionTypeEnum.expense))}</StatNumber>
+                                <StatHelpText>
+                                    <StatArrow type='increase' />
+                                    23.36%
+                                </StatHelpText>
+                            </Stat>
+                        </CardBody>
+                    </Card>
+                </GridItem>
+                <GridItem colSpan={[6, 6, 3]}>
+                    <Card>
+                        <CardBody>
+
+                        </CardBody>
+                    </Card>
+                </GridItem>
+                <GridItem colSpan={[6, 6, 3]}>
+                    <Card>
+                        <CardBody>
+
+                        </CardBody>
+                    </Card>
+                </GridItem>
                 <GridItem colSpan={[12]}>
                     <Card>
                         <CardBody>
@@ -53,7 +97,7 @@ const Dashboard: FC = () => {
                         <CardBody>
                             <Chart
                                 chartType="PieChart"
-                                 height="400px"
+                                height="400px"
                                 data={getIncomeGroupedByCategory(transactions ?? [], categories ?? [])}
                                 options={{
                                     legend: {
@@ -70,7 +114,7 @@ const Dashboard: FC = () => {
                         <CardBody>
                             <Chart
                                 chartType="PieChart"
-                                 height="400px"
+                                height="400px"
                                 data={getExpenseGroupedByCategory(transactions ?? [], categories ?? [])}
                                 options={{
                                     legend: {

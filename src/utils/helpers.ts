@@ -28,11 +28,19 @@ export function pathNameToHeading(pathName: string): string {
     }
 }
 
-export function getYearlySpan(year: number):{from: Date, to: Date}{
+export function getYearlySpan(year: number): { from: Date, to: Date } {
     const from = new Date(year, 0, 1)
     const to = new Date(year, 12, 0, 23, 59)
-    return{
+    return {
         from,
         to
     }
+}
+
+export function amountFormatter(amount: number): string {
+    const formatter = new Intl.NumberFormat('en-GB', {
+        notation: "compact",
+        compactDisplay: "short"
+    })
+    return `$${formatter.format(amount)} USD`
 }
