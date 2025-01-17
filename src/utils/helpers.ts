@@ -42,5 +42,5 @@ export function amountFormatter(amount: number): string {
         notation: "compact",
         compactDisplay: "short"
     })
-    return `$${formatter.format(amount)} USD`
+    return `$${formatter.format(amount)}`
 }

@@ -1,5 +1,5 @@
 import { ICategory } from "../interface/ICategory"
-import { ITransaction } from "../interface/ITransaction"
+import { ITransaction, TransactionType } from "../interface/ITransaction"
 import { monthNamesShort } from "../utils/helpers"
 import { getCategoryById } from "./category-services"
 
@@ -47,40 +47,23 @@ export function getMonthlyAverageIncomeAndExpense(transactions: ITransaction[]):
     }
 }
 
-export function getIncomeGroupedByCategory(transactions: ITransaction[], categories: ICategory[]): any[][] {
-    const group = groupTransactionsByCategories(transactions, categories)
-    const data: any[][] = []
-    Array.from(group.keys()).forEach(category => {
-        const row: any[] = []
-        row.push(category);
-        const totalIncome = group.get(category)
-            ?.filter(transaction => transaction.type === 'income')
-            .reduce((sum, transaction) => transaction.amount + sum, 0);
-        row.push(totalIncome)
-        data.push(row)
-    })
-    data.unshift([
-        'Categories',
-        'Total Income'
-    ])
-    return data
-}
 
-export function getExpenseGroupedByCategory(transactions: ITransaction[], categories: ICategory[]): any[][] {
+
+export function getTransactionsGroupedByCategory(transactions: ITransaction[], categories: ICategory[], type: TransactionType): any[][] {
     const group = groupTransactionsByCategories(transactions, categories)
     const data: any[][] = []
     Array.from(group.keys()).forEach(category => {
         const row: any[] = []
         row.push(category);
-        const totalIncome = group.get(category)
-            ?.filter(transaction => transaction.type === 'expense')
+        const total = group.get(category)
+            ?.filter(transaction => transaction.type === type)
             .reduce((sum, transaction) => transaction.amount + sum, 0);
-        row.push(totalIncome)
+        row.push(total)
         data.push(row)
     })
     data.unshift([
         'Categories',
-        'Total Expense'
+        type === "expense" ? 'Total Expense' : 'Total Income'
     ])
     return data
 }
