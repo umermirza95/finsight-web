@@ -2,7 +2,7 @@ import { FC, useContext, useEffect, useState } from "react";
 import { Box, Card, CardBody, Center, Grid, GridItem, Heading, HStack, Select, Stat, StatArrow, StatHelpText, StatLabel, StatNumber } from "@chakra-ui/react";
 import { fetchTransactions, fetchYearlyTransactions, getCategories } from "../services/data-service";
 import Chart from "react-google-charts";
-import { ITransaction, TransactionTypeEnum } from "../interface/ITransaction";
+import { ITransaction } from "../interface/ITransaction";
 import { getIncomeAndExpenseGroupedByMonth, getMonthlyAverageIncomeAndExpense, getTotal, getTransactionsGroupedByCategory } from "../services/transaction-services";
 import { ThemeContext } from "../contexts/theme-context";
 import { useQuery } from "@tanstack/react-query";
@@ -39,7 +39,7 @@ const Dashboard: FC = () => {
                         <CardBody pb={0} pt={2}>
                             <Stat>
                                 <StatLabel>Total Income</StatLabel>
-                                <StatNumber>{amountFormatter(getTotal(transactions ?? [], TransactionTypeEnum.income))}</StatNumber>
+                                <StatNumber>{amountFormatter(getTotal(transactions ?? [], "income"))}</StatNumber>
                                 <StatHelpText>
                                     <StatArrow type='increase' />
                                     23.36%

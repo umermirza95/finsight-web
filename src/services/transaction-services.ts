@@ -69,7 +69,7 @@ export function getTransactionsGroupedByCategory(transactions: ITransaction[], c
 }
 
 
-export function getTotal(transactions: ITransaction[], type: string): number {
+export function getTotal(transactions: ITransaction[], type: TransactionType): number {
     return transactions.filter(t => t.type === type).reduce((sum, t) => t.amount + sum, 0);
 }
 

@@ -1,5 +1,5 @@
 export interface ITransaction {
-    id:string
+    id: string
     type: TransactionType,
     mode: string,
     amount: number,
@@ -10,7 +10,10 @@ export interface ITransaction {
 }
 
 export type TransactionType = "income" | "expense"
-export enum TransactionTypeEnum {
-    income = "income",
-    expense = "expense"
-};
+export type TransactionMode = "card" | "cash" | "online" | "transfer"
+export enum SupportedCurrencies {
+    PKR = "PKR",
+    USD = "USD",
+    AED = "AED",
+    EUR = "EUR"
+}

@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { ITransaction, TransactionType, TransactionTypeEnum } from "../interface/ITransaction";
+import { ITransaction, TransactionType } from "../interface/ITransaction";
 import { Box, Center, Heading, HStack } from "@chakra-ui/react";
 import { amountFormatter } from "../utils/helpers";
 import { getTotal, getTransactionsGroupedByCategory } from "../services/transaction-services";
