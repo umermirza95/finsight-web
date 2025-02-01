@@ -1,5 +1,5 @@
 import { FC, useContext, useEffect, useState } from "react";
-import { ITransaction } from "../interface/ITransaction";
+import { ITransaction, SupportedCurrencies } from "../interface/ITransaction";
 import { Box, Circle, Heading, HStack, Text } from "@chakra-ui/react";
 import { CategoriesContext } from "../contexts/categories-contexts";
 import { ICategory } from "../interface/ICategory";
@@ -36,9 +36,19 @@ const TransactionItem: FC<Props> = ({ transaction }) => {
                         {transaction.comment}
                     </Text>
                 </Box>
-                <Heading size='xs' textTransform='uppercase' color={transaction.type === 'income' ? 'green' : undefined}>
-                    {`$${transaction.amount} USD`}
-                </Heading>
+                <Box>
+                    <Heading size='xs' textTransform='uppercase' color={transaction.type === 'income' ? 'green' : undefined}>
+                        {`$${transaction.amount} USD`}
+                    </Heading>
+                    {
+                        !!transaction.currency && transaction.currency !== SupportedCurrencies.USD &&
+                        (
+                            <Text color='gray' fontSize='sm'>
+                                {`${transaction.baseAmount} ${transaction.currency}`}
+                            </Text>
+                        )
+                    }
+                </Box>
             </HStack>
         </HStack>
     )

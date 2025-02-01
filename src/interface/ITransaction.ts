@@ -6,7 +6,9 @@ export interface ITransaction {
     comment?: string
     categoryId: string,
     subCategoryId?: string,
-    date: Date
+    date: Date,
+    currency?: string,
+    baseAmount: number
 }
 
 export type TransactionType = "income" | "expense"
