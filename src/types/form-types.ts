@@ -13,14 +13,13 @@ export type NewTransactionForm = {
     useLiveFx?: boolean
 }
 
-export const DefaultTransactionForm: NewTransactionForm = {
+export const DefaultTransactionForm = {
     type: "expense",
     processingFeePercent: false,
-    amount: 0,
     currency: SupportedCurrencies.PKR,
     categoryId: "",
     comment: "",
     date: new Date().toISOString().split('T')[0],
     mode: "online",
-    useLiveFx: false
+    useLiveFx: false,
 }

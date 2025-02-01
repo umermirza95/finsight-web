@@ -9,6 +9,7 @@ export async function getCategories(): Promise<ICategory[]> {
 }
 
 export async function createTransaction(payload: any): Promise<ITransaction> {
+    payload.subCategoryId = !payload.subCategoryId ? undefined : payload.subCategoryId
     const data = await POST('/transaction', payload)
     return data.transaction;
 }

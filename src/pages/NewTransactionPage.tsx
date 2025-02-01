@@ -1,4 +1,4 @@
-import { FC, useContext, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { useForm, SubmitHandler, Form, FieldValues } from "react-hook-form"
 import { Button, Checkbox, FormControl, FormLabel, HStack, Input, NumberInput, NumberInputField, Select, useToast, VStack } from "@chakra-ui/react";
 import { createTransaction, getCategories } from "../services/data-service";
@@ -9,11 +9,10 @@ import { getCategoryById } from "../services/category-services";
 import { SupportedCurrencies } from "../interface/ITransaction";
 
 const NewTransactionPage: FC = () => {
-    const { formState: { errors, isSubmitting }, control, register, watch } = useForm<NewTransactionForm>({ defaultValues: DefaultTransactionForm })
+    const { formState: { errors, isSubmitting }, control, register, watch, setValue } = useForm<NewTransactionForm>({ defaultValues: DefaultTransactionForm as NewTransactionForm })
     const toast = useToast()
     const { categories } = useContext(CategoriesContext);
-
-
+    const selectedCategory = watch("categoryId");
 
 
     const onsubmit = async (form: FieldValues) => {
@@ -31,7 +30,7 @@ const NewTransactionPage: FC = () => {
         }
     }
 
-    const selectedCategory: ICategory | undefined = getCategoryById(categories, watch("categoryId"));
+
     return (
         <Form control={control} onSubmit={onsubmit}>
             <VStack spacing={5}>
@@ -75,12 +74,12 @@ const NewTransactionPage: FC = () => {
                     </Select>
                 </FormControl>
                 {
-                    !!selectedCategory?.subCategories?.length &&
+                    !!getCategoryById(categories, selectedCategory)?.subCategories?.length &&
                     <FormControl>
                         <FormLabel>Sub Category</FormLabel>
                         <Select {...register("subCategoryId")} placeholder='Select Sub Category'>
                             {
-                                selectedCategory.subCategories.map(subCategory => (
+                                getCategoryById(categories, selectedCategory)?.subCategories?.map(subCategory => (
                                     <option key={subCategory.id} value={subCategory.id}>{subCategory.name}</option>
                                 ))
                             }
