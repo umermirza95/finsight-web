@@ -5,7 +5,7 @@ export async function GET(path: string) {
     if (!token) {
         token = await getIdToken();
     }
-    const url = `${process.env.REACT_APP_API_URL}${path.replaceAll(':', '%3A')}`
+    const url = `${process.env.REACT_APP_API_DOTNET}${path.replaceAll(':', '%3A')}`
     console.log(`GET ${url}`)
     const request = await fetch(url, {
         method: 'GET',
@@ -19,7 +19,7 @@ export async function GET(path: string) {
     if (request.status >= 400) {
         throw Error(response);
     }
-    return JSON.parse(response).data
+    return JSON.parse(response)
 }
 
 export async function POST(path: string, payload: any) {

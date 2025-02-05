@@ -53,7 +53,7 @@ const NewTransactionPage: FC = () => {
                 <FormControl isRequired>
                     <HStack justify='space-between'>
                         <FormLabel>Currency</FormLabel>
-                        <Checkbox >Use Live FX</Checkbox>
+                        <Checkbox {...register("useLiveFx")} >Use Live FX</Checkbox>
                     </HStack>
                     <Select {...register("currency")}>
                         {Object.values(SupportedCurrencies).map((currency) => {

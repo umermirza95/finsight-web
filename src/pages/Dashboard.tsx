@@ -34,48 +34,6 @@ const Dashboard: FC = () => {
                 </Select>
             </HStack>
             <Grid gap={4} templateColumns='repeat(12, 1fr)'>
-                <GridItem colSpan={[6, 6, 3]}>
-                    <Card >
-                        <CardBody pb={0} pt={2}>
-                            <Stat>
-                                <StatLabel>Total Income</StatLabel>
-                                <StatNumber>{amountFormatter(getTotal(transactions ?? [], "income"))}</StatNumber>
-                                <StatHelpText>
-                                    <StatArrow type='increase' />
-                                    23.36%
-                                </StatHelpText>
-                            </Stat>
-                        </CardBody>
-                    </Card>
-                </GridItem>
-                <GridItem colSpan={[6, 6, 3]}>
-                    <Card>
-                        <CardBody pb={0} pt={2}>
-                            <Stat>
-                                <StatLabel>Total Expense</StatLabel>
-                                <StatNumber>{ }</StatNumber>
-                                <StatHelpText>
-                                    <StatArrow type='increase' />
-                                    23.36%
-                                </StatHelpText>
-                            </Stat>
-                        </CardBody>
-                    </Card>
-                </GridItem>
-                <GridItem colSpan={[6, 6, 3]}>
-                    <Card>
-                        <CardBody>
-
-                        </CardBody>
-                    </Card>
-                </GridItem>
-                <GridItem colSpan={[6, 6, 3]}>
-                    <Card>
-                        <CardBody>
-
-                        </CardBody>
-                    </Card>
-                </GridItem>
                 <GridItem colSpan={[12]}>
                     <Card>
                         <CardBody>
