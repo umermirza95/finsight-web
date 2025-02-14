@@ -1,34 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Drawer, DrawerContent, DrawerOverlay, Grid, GridItem, Heading, HStack, Show, VStack } from '@chakra-ui/react';
 import { pathNameToHeading } from './utils/helpers';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import FSDrawer from './components/FSDrawer';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const App: React.FC = () => {
 	const [isOpen, setIsOpen] = useState(false)
+	const [authInit, setInit] = useState(false);
 	const navigate = useNavigate();
 	const { pathname } = useLocation()
 
-	const gotoTransactions = () => {
-		setIsOpen(false)
-		navigate('/transactions')
-	}
-
-	const gotoDashboard = () => {
-		setIsOpen(false)
-		navigate('/')
-	}
-
 	useEffect(() => {
-		onAuthStateChanged(getAuth(), user => {
+		onAuthStateChanged(getAuth(), (user) => {
 			if (!user) {
-				console.log("redirecting")
-				//navigate("/login")
+				navigate("/login");
+			}
+			else {
+				setInit(true);
 			}
 		})
 	}, [])
+
 
 	return (
 		<Grid
@@ -55,7 +49,7 @@ const App: React.FC = () => {
 				</HStack>
 			</GridItem>
 			<GridItem overflowY='scroll' px='2' py='4' rowSpan={9} colSpan={[12, 12, 12, 10]}>
-				<Outlet />
+				{authInit && <Outlet />}
 			</GridItem>
 			<Drawer
 				isOpen={isOpen}

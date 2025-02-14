@@ -1,15 +1,15 @@
 import { FC, useContext, useEffect, useState } from "react";
 import { ITransaction, SupportedCurrencies } from "../interface/ITransaction";
 import { Box, Circle, Heading, HStack, Text, VStack } from "@chakra-ui/react";
-import { CategoriesContext } from "../contexts/categories-contexts";
 import { ICategory } from "../interface/ICategory";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
+import { useCategories } from "../hooks/useCategories";
 
 interface Props {
     transaction: ITransaction
 }
 const TransactionItem: FC<Props> = ({ transaction }) => {
-    const { categories } = useContext(CategoriesContext)
+    const { categories } = useCategories();
     const [category, setCategory] = useState<ICategory>()
 
     useEffect(() => {

@@ -1,17 +1,15 @@
+import { getAuth } from "firebase/auth";
 
-let token: string | null = null;
+let token: string;
 
 export async function GET(path: string) {
-    if (!token) {
-        token = await getIdToken();
-    }
+    token = await getToken();
     const url = `${process.env.REACT_APP_API_DOTNET}${path.replaceAll(':', '%3A')}`
     console.log(`GET ${url}`)
     const request = await fetch(url, {
         method: 'GET',
         headers: {
-            'Authorization': `Bearer ${token}`,
-            'content-type': 'application/json'
+            'Authorization': `Bearer ${token}`
         }
     })
     const response = await request.text()
@@ -23,10 +21,8 @@ export async function GET(path: string) {
 }
 
 export async function POST(path: string, payload: any) {
-    if (!token) {
-        token = await getIdToken();
-    }
-    const url = `${process.env.REACT_APP_API_URL}${path}`
+    token = await getToken();
+    const url = `${process.env.REACT_APP_API_DOTNET}${path}`
     console.log(`POST ${url}`)
     const request = await fetch(url, {
         method: 'POST',
@@ -45,21 +41,13 @@ export async function POST(path: string, payload: any) {
     return JSON.parse(response).data
 }
 
-async function getIdToken(): Promise<string> {
-    const request = await fetch(`${process.env.REACT_APP_API_URL}/signIn`, {
-        method: 'POST',
-        body: JSON.stringify({
-            email: process.env.REACT_APP_EMAIL,
-            password: process.env.REACT_APP_PASSWORD
-        }),
-        headers: {
-            'content-type': 'application/json'
-        }
-    });
-    const response = await request.text()
-    console.log(response)
-    if (request.status >= 400) {
-        throw Error(response);
+async function getToken(): Promise<string> {
+    if (token) {
+        return token;
     }
-    return JSON.parse(response).data.token;
+    const IdToken = await getAuth().currentUser?.getIdToken();
+    if (!IdToken) {
+        throw Error("user not logged in");
+    }
+    return IdToken as string;
 }

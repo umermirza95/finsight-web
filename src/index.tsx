@@ -12,8 +12,7 @@ import { initializeApp } from 'firebase/app';
 import Login from './pages/Login';
 import TransactionPage from './pages/TransactionPage';
 import NewTransactionPage from './pages/NewTransactionPage';
-import { QueryClient, QueryClientProvider } from  '@tanstack/react-query';
-import { CategoriesContextProvider } from './contexts/categories-contexts';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Dashboard from './pages/Dashboard';
 import { ThemeContextProvider } from './contexts/theme-context';
 
@@ -59,11 +58,9 @@ root.render(
   <React.StrictMode>
     <ChakraProvider>
       <QueryClientProvider client={queryClient}>
-        <CategoriesContextProvider>
-          <ThemeContextProvider>
-            <RouterProvider router={router} />
-          </ThemeContextProvider>
-        </CategoriesContextProvider>
+        <ThemeContextProvider>
+          <RouterProvider router={router} />
+        </ThemeContextProvider>
       </QueryClientProvider>
     </ChakraProvider>
   </React.StrictMode>

@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { Button, Card, CardBody, CardHeader, Heading, HStack, Stack, StackDivider} from "@chakra-ui/react";
+import { Button, Card, CardBody, CardHeader, Heading, HStack, Stack, StackDivider } from "@chakra-ui/react";
 import { ITransaction } from "../interface/ITransaction";
 import { fetchTransactions } from "../services/data-service";
 import TransactionItem from "../components/TransactionItem";
@@ -31,7 +31,7 @@ const TransactionPage: FC = () => {
                     <Button size='sm' leftIcon={<SettingsIcon />} colorScheme='teal' variant='solid'>
                         Filters
                     </Button>
-                    <Button onClick={()=> navigate('/transactions/add')} size='sm' leftIcon={<AddIcon />} colorScheme='teal' variant='solid'>
+                    <Button onClick={() => navigate('/transactions/add')} size='sm' leftIcon={<AddIcon />} colorScheme='teal' variant='solid'>
                         Create New
                     </Button>
                 </HStack>

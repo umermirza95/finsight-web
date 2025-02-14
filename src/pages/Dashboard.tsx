@@ -9,14 +9,12 @@ import { useQuery } from "@tanstack/react-query";
 import { CalendarIcon } from "@chakra-ui/icons";
 import { amountFormatter } from "../utils/helpers";
 import PieChart from "../components/PieChart";
+import { useCategories } from "../hooks/useCategories";
 
 const Dashboard: FC = () => {
     const { theme } = useContext(ThemeContext);
     const [year, setYear] = useState(new Date().getFullYear());
-    const { data: categories } = useQuery({
-        queryKey: ["categories"],
-        queryFn: () => getCategories()
-    })
+    const { categories } = useCategories();
     const { data: transactions } = useQuery({
         queryKey: [year],
         queryFn: () => fetchYearlyTransactions(year),
