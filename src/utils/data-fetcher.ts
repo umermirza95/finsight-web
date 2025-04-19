@@ -17,7 +17,7 @@ export async function GET(path: string) {
     if (request.status >= 400) {
         throw Error(response);
     }
-    return JSON.parse(response)
+    return JSON.parse(response).data
 }
 
 export async function POST(path: string, payload: any) {
