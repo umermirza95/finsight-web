@@ -4,7 +4,7 @@ let token: string;
 
 export async function GET(path: string) {
     token = await getToken();
-    const url = `${process.env.REACT_APP_API_DOTNET}${path.replaceAll(':', '%3A')}`
+    const url = `${process.env.REACT_APP_API_URL}${path.replaceAll(':', '%3A')}`
     console.log(`GET ${url}`)
     const request = await fetch(url, {
         method: 'GET',
@@ -22,7 +22,7 @@ export async function GET(path: string) {
 
 export async function POST(path: string, payload: any) {
     token = await getToken();
-    const url = `${process.env.REACT_APP_API_DOTNET}${path}`
+    const url = `${process.env.REACT_APP_API_URL}${path}`
     console.log(`POST ${url}`)
     const request = await fetch(url, {
         method: 'POST',

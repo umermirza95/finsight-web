@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { ICategory } from "../interface/ICategory";
 import { getCategories } from "../services/data-service";
 import { useQuery } from "@tanstack/react-query";
 
