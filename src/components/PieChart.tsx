@@ -6,30 +6,26 @@ import { getTotal, getTransactionsGroupedByCategory } from "../services/transact
 import Chart from "react-google-charts";
 import { ICategory } from "../interface/ICategory";
 
+export type AggregationType = "sum" | "average"
 interface Props {
-    type: TransactionType,
+    transactionType: TransactionType,
+    aggregationType: AggregationType
     transactions: ITransaction[],
     categories: ICategory[]
 }
-const PieChart: FC<Props> = ({type, transactions, categories}) => {
+const PieChart: FC<Props> = ({ transactionType, transactions, categories, aggregationType }) => {
     return (
         <Box>
-            <Center transform='translate(-50%, -50%)' top='50%' left='50%' position='absolute' zIndex={100}>
-                <Heading size='lg' >
-                    {amountFormatter(getTotal(transactions ?? [], type))}
-                </Heading>
-            </Center>
-            <HStack justify='center'>
-                <Heading size='sm'>
-                    {type === "expense" ? "Total Expenses" : "Total Income"}
-                </Heading>
-            </HStack>
+            <Heading size='md' textAlign="center">
+                {aggregationType === "sum" ? "Total" : "Average"}{" "}
+                {transactionType === "expense" ? "Expenses" : "Income"}{" "}
+                {amountFormatter(getTotal(transactions ?? [], transactionType))}
+            </Heading>
             <Chart
                 chartType="PieChart"
                 height="400px"
-                data={getTransactionsGroupedByCategory(transactions ?? [], categories ?? [], type)}
+                data={getTransactionsGroupedByCategory(transactions ?? [], categories ?? [], transactionType)}
                 options={{
-                    pieHole: 0.5,
                     is3D: false,
                     legend: {
                         position: 'none'
