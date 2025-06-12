@@ -23,7 +23,7 @@ export async function fetchTransactions(from: Date, to: Date): Promise<ITransact
 }
 
 export async function fetchTransactionById(id:string): Promise<ITransaction> {
-    const data = await GET(`/transactions/${id}`)
+    const data = await GET(`/transaction/${id}`)
     return data.transaction as ITransaction;
 }
 
