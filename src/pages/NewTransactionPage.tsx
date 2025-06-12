@@ -1,18 +1,20 @@
-import { FC, useContext, useEffect, useState } from "react";
-import { useForm, SubmitHandler, Form, FieldValues } from "react-hook-form"
+import { FC, useEffect } from "react";
+import { useForm, Form, FieldValues } from "react-hook-form"
 import { Button, Checkbox, FormControl, FormLabel, HStack, Input, NumberInput, NumberInputField, Select, useToast, VStack } from "@chakra-ui/react";
-import { createTransaction, getCategories } from "../services/data-service";
-import { ICategory, ISubCategory } from "../interface/ICategory";
+import { createTransaction, fetchTransactionById } from "../services/data-service";
 import { DefaultTransactionForm, NewTransactionForm } from "../types/form-types";
 import { getCategoryById } from "../services/category-services";
 import { SupportedCurrencies } from "../interface/ITransaction";
 import { useCategories } from "../hooks/useCategories";
+import { useParams } from "react-router-dom";
 
 const NewTransactionPage: FC = () => {
     const { formState: { errors, isSubmitting }, control, register, watch, setValue } = useForm<NewTransactionForm>({ defaultValues: DefaultTransactionForm as NewTransactionForm })
     const toast = useToast()
     const { categories } = useCategories();
     const selectedCategory = watch("categoryId");
+    const { id } = useParams();
+    const isEditMode = !!id && id !== "add";
 
 
     const onsubmit = async (form: FieldValues) => {
@@ -29,6 +31,27 @@ const NewTransactionPage: FC = () => {
             })
         }
     }
+
+    useEffect(() => {
+        if (isEditMode) {
+            (async () => {
+                try {
+                    const transaction = await fetchTransactionById(id!);
+                    Object.entries(transaction).forEach(([key, value]) => {
+                        setValue(key as keyof NewTransactionForm, value);
+                    });
+                } catch (error: any) {
+                    toast({
+                        title: 'Failed to load transaction',
+                        description: error.message,
+                        status: 'error',
+                        duration: 9000,
+                        isClosable: true,
+                    });
+                }
+            })();
+        }
+    }, [id, isEditMode, setValue, toast]);
 
 
     return (

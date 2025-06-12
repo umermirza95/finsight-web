@@ -62,18 +62,12 @@ const Dashboard: FC = () => {
                                     <Center h='100%'>
                                         <VStack alignItems="flex-start" spacing={8}>
                                             <RadioGroup onChange={(value: string) => setTransactionType(value as TransactionType)} value={transactionType}>
-                                                <Heading size='sm' mb={4}>
-                                                    Transaction Type
-                                                </Heading>
                                                 <Stack direction='row'>
                                                     <Radio value="expense">Expense</Radio>
                                                     <Radio value='income'>Income</Radio>
                                                 </Stack>
                                             </RadioGroup>
                                             <RadioGroup onChange={(value: string) => setAggregationType(value as AggregationType)} value={aggregationType}>
-                                                <Heading size='sm' mb={4}>
-                                                    Aggregation Type
-                                                </Heading>
                                                 <Stack direction='row'>
                                                     <Radio value="sum">Sum</Radio>
                                                     <Radio value='average'>Average</Radio>
