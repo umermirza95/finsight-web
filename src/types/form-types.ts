@@ -1,6 +1,7 @@
 import { SupportedCurrencies, TransactionMode, TransactionType } from "../interface/ITransaction"
 
 export type NewTransactionForm = {
+    id?: string
     type: TransactionType,
     amount: number,
     processingFeePercent: boolean,

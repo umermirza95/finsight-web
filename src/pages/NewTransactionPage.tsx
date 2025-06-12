@@ -1,5 +1,5 @@
-import { FC, useEffect } from "react";
-import { useForm, Form, FieldValues } from "react-hook-form"
+import { FC, useEffect, useState } from "react";
+import { useForm, Form, FieldValues, Controller } from "react-hook-form"
 import { Button, Checkbox, FormControl, FormLabel, HStack, Input, NumberInput, NumberInputField, Select, useToast, VStack } from "@chakra-ui/react";
 import { createTransaction, fetchTransactionById } from "../services/data-service";
 import { DefaultTransactionForm, NewTransactionForm } from "../types/form-types";
@@ -9,12 +9,14 @@ import { useCategories } from "../hooks/useCategories";
 import { useParams } from "react-router-dom";
 
 const NewTransactionPage: FC = () => {
-    const { formState: { errors, isSubmitting }, control, register, watch, setValue } = useForm<NewTransactionForm>({ defaultValues: DefaultTransactionForm as NewTransactionForm })
+    const { id } = useParams();
+    const isEditMode = !!id && id !== "add";
+    const { formState: { errors, isSubmitting }, control, register, watch, setValue } = useForm<NewTransactionForm>()
     const toast = useToast()
     const { categories } = useCategories();
     const selectedCategory = watch("categoryId");
-    const { id } = useParams();
-    const isEditMode = !!id && id !== "add";
+
+
 
 
     const onsubmit = async (form: FieldValues) => {
@@ -32,26 +34,37 @@ const NewTransactionPage: FC = () => {
         }
     }
 
-    useEffect(() => {
-        if (isEditMode) {
-            (async () => {
-                try {
-                    const transaction = await fetchTransactionById(id!);
-                    Object.entries(transaction).forEach(([key, value]) => {
-                        setValue(key as keyof NewTransactionForm, value);
-                    });
-                } catch (error: any) {
-                    toast({
-                        title: 'Failed to load transaction',
-                        description: error.message,
-                        status: 'error',
-                        duration: 9000,
-                        isClosable: true,
-                    });
+    const getTransaction = async (tid: string) => {
+        try {
+            const transaction = await fetchTransactionById(id!);
+            Object.entries(transaction).forEach(([key, value]) => {
+                if (key === "baseAmount") {
+                    setValue("amount", parseInt(value));
                 }
-            })();
+                else if (key === "date") {
+                    const formattedDate = new Date(value).toISOString().split("T")[0]; // "YYYY-MM-DD"
+                    setValue("date", formattedDate);
+                }
+                else {
+                    setValue(key as keyof NewTransactionForm, value);
+                }
+            });
+        } catch (error: any) {
+            toast({
+                title: 'Failed to load transaction',
+                description: error.message,
+                status: 'error',
+                duration: 9000,
+                isClosable: true,
+            });
         }
-    }, [id, isEditMode, setValue, toast]);
+    }
+
+    useEffect(() => {
+        if (!!id && id !== 'add') {
+            getTransaction(id);
+        }
+    }, [id]);
 
 
     return (
@@ -69,9 +82,26 @@ const NewTransactionPage: FC = () => {
                         <FormLabel>Amount</FormLabel>
                         <Checkbox {...register("processingFeePercent")}>Add processing fee 1.45%</Checkbox>
                     </HStack>
-                    <NumberInput precision={2} min={0}>
-                        <NumberInputField {...register("amount")} />
-                    </NumberInput>
+                    <Controller
+                        name="amount"
+                        control={control}
+                        render={({ field }) => (
+                            <NumberInput
+                                precision={2}
+                                min={0}
+                                value={field.value}
+                                onChange={(valueString, valueNumber) => {
+                                    if (valueString === "") {
+                                        field.onChange("");
+                                    } else if (!isNaN(valueNumber)) {
+                                        field.onChange(valueNumber);
+                                    }
+                                }}
+                            >
+                                <NumberInputField />
+                            </NumberInput>
+                        )}
+                    />
                 </FormControl>
                 <FormControl isRequired>
                     <HStack justify='space-between'>

@@ -22,10 +22,12 @@ export function pathNameToHeading(pathName: string): string {
         case '/transactions':
             return 'Transactions'
         case '/transactions/add':
-            return 'Add Transaction'
-        default:
-            return ''
+            return 'Add Transaction';
     }
+    if (/^\/transactions\/[^/]+$/.test(pathName)) {
+        return 'Edit Transaction';
+    }
+    return '';
 }
 
 export function getYearlySpan(year: number): { from: Date, to: Date } {

@@ -1,5 +1,6 @@
 import { ICategory } from "../interface/ICategory"
 import { ITransaction, TransactionType } from "../interface/ITransaction"
+import { NewTransactionForm } from "../types/form-types"
 import { monthNamesShort } from "../utils/helpers"
 import { getCategoryById } from "./category-services"
 
