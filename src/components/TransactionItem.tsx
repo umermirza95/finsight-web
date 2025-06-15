@@ -8,8 +8,9 @@ import { useNavigate } from "react-router-dom";
 
 interface Props {
     transaction: ITransaction
+    onDelete: (transaction: ITransaction) => void
 }
-const TransactionItem: FC<Props> = ({ transaction }) => {
+const TransactionItem: FC<Props> = ({ transaction, onDelete }) => {
     const { categories } = useCategories();
     const [category, setCategory] = useState<ICategory>()
     const navigate = useNavigate();
@@ -58,7 +59,7 @@ const TransactionItem: FC<Props> = ({ transaction }) => {
                         </MenuButton>
                         <MenuList>
                             <MenuItem onClick={() => navigate(`/transactions/${transaction.id}`)} icon={<EditIcon />}>Edit</MenuItem>
-                            <MenuItem icon={<DeleteIcon />}>Delete</MenuItem>
+                            <MenuItem onClick={()=> onDelete(transaction)} icon={<DeleteIcon />}>Delete</MenuItem>
                         </MenuList>
                     </Menu>
                 </HStack>

@@ -1,6 +1,6 @@
 import { ICategory } from "../interface/ICategory";
 import { ITransaction } from "../interface/ITransaction";
-import { GET, PUT } from "../utils/data-fetcher";
+import { DELETE, GET, PUT } from "../utils/data-fetcher";
 import { getYearlySpan } from "../utils/helpers";
 
 export async function getCategories(): Promise<ICategory[]> {
@@ -30,5 +30,9 @@ export async function fetchTransactionById(id:string): Promise<ITransaction> {
 export async function fetchYearlyTransactions(year: number): Promise<ITransaction[]> {
     const { from, to } = getYearlySpan(year)
     return await fetchTransactions(from, to);
+}
+
+export async function deleteTransaction(id:string){
+    return await DELETE(`/transaction/${id}`);
 }
 

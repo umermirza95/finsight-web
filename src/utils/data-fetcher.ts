@@ -20,6 +20,22 @@ export async function GET(path: string) {
     return JSON.parse(response).data
 }
 
+export async function DELETE(path: string) {
+    token = await getToken();
+    const url = `${process.env.REACT_APP_API_URL}${path.replaceAll(':', '%3A')}`
+    console.log(`DELETE ${url}`)
+    const request = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    const response = await request.text()
+    if (request.status >= 400) {
+        throw Error(response);
+    }
+}
+
 export async function POST(path: string, payload: any) {
     token = await getToken();
     const url = `${process.env.REACT_APP_API_URL}${path}`

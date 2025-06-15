@@ -1,15 +1,19 @@
-import { FC, useEffect, useState } from "react";
-import { Button, Card, CardBody, CardHeader, Heading, HStack, Stack, StackDivider } from "@chakra-ui/react";
+import { useRef, FC, useEffect, useState } from "react";
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Card, CardBody, CardHeader, HStack, Stack, StackDivider, useDisclosure } from "@chakra-ui/react";
 import { ITransaction } from "../interface/ITransaction";
-import { fetchTransactions } from "../services/data-service";
+import { deleteTransaction, fetchTransactions } from "../services/data-service";
 import TransactionItem from "../components/TransactionItem";
 import { AddIcon, SettingsIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router-dom";
 
 
+
 const TransactionPage: FC = () => {
     const navigate = useNavigate();
+    const { onClose } = useDisclosure()
+    const cancelRef = useRef(null)
     const [transactions, setTransactions] = useState<ITransaction[]>([])
+    const [transactionTobeDeleted, setDelTransaction] = useState<ITransaction | undefined>();
 
     const getTransactions = async () => {
         const currentDate = new Date();
@@ -18,12 +22,30 @@ const TransactionPage: FC = () => {
         setTransactions(await fetchTransactions(firstOfMonth, lastDayOfMonth))
     }
 
+    const showDeleteConfirmation = (transaction: ITransaction) => {
+        setDelTransaction(transaction);
+    }
+
+    const hideDeleteConfirmation = () => {
+        setDelTransaction(undefined);
+    }
+
+    const delTransaction = async () => {
+        try {
+            let id = transactionTobeDeleted?.id!!;
+            await deleteTransaction(id)
+            getTransactions();
+        }
+        catch (error) {
+            console.log(error);
+        }
+        hideDeleteConfirmation()
+    }
+
     useEffect(() => {
         getTransactions()
     }, [])
 
-    const totalExpenses = transactions.filter(t => t.type === 'expense').reduce((sum, transaction) => sum + transaction.amount, 0);
-    const totalIncome = transactions.filter(t => t.type === 'income').reduce((sum, transaction) => sum + transaction.amount, 0);
     return (
         <Card>
             <CardHeader>
@@ -41,12 +63,38 @@ const TransactionPage: FC = () => {
                 <Stack divider={<StackDivider />} spacing='3'>
                     {
                         transactions.map(transaction => (
-                            <TransactionItem key={transaction.id} transaction={transaction} />
+                            <TransactionItem key={transaction.id} transaction={transaction} onDelete={showDeleteConfirmation} />
                         ))
                     }
                 </Stack>
             </CardBody>
-        </Card>
+            <AlertDialog
+                isOpen={!!transactionTobeDeleted}
+                leastDestructiveRef={cancelRef}
+                onClose={hideDeleteConfirmation}
+            >
+                <AlertDialogOverlay>
+                    <AlertDialogContent>
+                        <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                            Delete Transaction
+                        </AlertDialogHeader>
+
+                        <AlertDialogBody>
+                            Are you sure? You can't undo this action afterwards.
+                        </AlertDialogBody>
+
+                        <AlertDialogFooter>
+                            <Button ref={cancelRef} onClick={hideDeleteConfirmation}>
+                                Cancel
+                            </Button>
+                            <Button colorScheme='red' onClick={delTransaction} ml={3}>
+                                Delete
+                            </Button>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialogOverlay>
+            </AlertDialog>
+        </Card >
     );
 }
 

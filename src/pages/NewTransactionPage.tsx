@@ -42,7 +42,7 @@ const NewTransactionPage: FC = () => {
                     setValue("amount", parseInt(value));
                 }
                 else if (key === "date") {
-                    const formattedDate = new Date(value).toISOString().split("T")[0]; // "YYYY-MM-DD"
+                    const formattedDate = new Date(value).toISOString().split("T")[0];
                     setValue("date", formattedDate);
                 }
                 else {
@@ -154,7 +154,7 @@ const NewTransactionPage: FC = () => {
                 </FormControl>
                 <FormControl isRequired>
                     <FormLabel>Date</FormLabel>
-                    <Input {...register("date")} type='date' />
+                    <Input defaultValue={new Date().toISOString().split('T')[0]} {...register("date")} type='date' />
                 </FormControl>
                 <Button type="submit" isLoading={isSubmitting} w='100%' colorScheme='teal' variant='solid'>
                     Submit
