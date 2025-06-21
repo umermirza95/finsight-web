@@ -1,25 +1,44 @@
 import { useRef, FC, useEffect, useState } from "react";
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Card, CardBody, CardHeader, HStack, Stack, StackDivider, useDisclosure } from "@chakra-ui/react";
-import { ITransaction } from "../interface/ITransaction";
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Card, CardBody, CardHeader, filter, HStack, Input, Menu, MenuButton, MenuItem, MenuList, Select, Stack, StackDivider, useDisclosure } from "@chakra-ui/react";
+import { ITransaction, TransactionType } from "../interface/ITransaction";
 import { deleteTransaction, fetchTransactions } from "../services/data-service";
 import TransactionItem from "../components/TransactionItem";
 import { AddIcon, SettingsIcon } from "@chakra-ui/icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useCategories } from "../hooks/useCategories";
 
-
+export interface ITransactionsFilter{
+    startDate?: Date,
+    endDate?: Date,
+    category?: string,
+    type?: TransactionType | ''
+}
 
 const TransactionPage: FC = () => {
+    const [searchParams] = useSearchParams();
+    const currentDate = new Date();
     const navigate = useNavigate();
+    const { categories } = useCategories();
     const { onClose } = useDisclosure()
     const cancelRef = useRef(null)
     const [transactions, setTransactions] = useState<ITransaction[]>([])
     const [transactionTobeDeleted, setDelTransaction] = useState<ITransaction | undefined>();
+    const [filters, setFilters] = useState<ITransactionsFilter>({
+        startDate: searchParams.get("startDate")
+            ? new Date(searchParams.get("startDate")!)
+            : new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
+
+        endDate: searchParams.get("endDate")
+            ? new Date(searchParams.get("endDate")!)
+            : new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0, 23, 59),
+
+        category: searchParams.get("category") || '',
+        type: searchParams.get("type") as TransactionType || ''
+    });
 
     const getTransactions = async () => {
-        const currentDate = new Date();
-        const firstOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-        const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0, 23, 59);
-        setTransactions(await fetchTransactions(firstOfMonth, lastDayOfMonth))
+
+        setTransactions(await fetchTransactions(filters))
     }
 
     const showDeleteConfirmation = (transaction: ITransaction) => {
@@ -44,15 +63,87 @@ const TransactionPage: FC = () => {
 
     useEffect(() => {
         getTransactions()
-    }, [])
+    }, [filters])
 
     return (
         <Card>
             <CardHeader>
                 <HStack justify='space-between'>
-                    <Button size='sm' leftIcon={<SettingsIcon />} colorScheme='teal' variant='solid'>
-                        Filters
-                    </Button>
+                    <Menu>
+                        <MenuButton as={Button} size='sm' leftIcon={<SettingsIcon />} colorScheme='teal'>
+                            Filters
+                        </MenuButton>
+                        <MenuList minW="250px" px={4} py={2}>
+                            <Stack spacing={4}>
+                                <Stack>
+                                    <label>Start Date</label>
+                                    <Box
+                                        border="1px solid"
+                                        borderColor="gray.200"
+                                        rounded="md"
+                                        px={3}
+                                        py={2}
+                                    >
+                                        <Input
+                                            type="date"
+                                            border="none"
+                                            padding="0"
+                                            value={filters.startDate?.toISOString().split('T')[0] || ''}
+                                            onChange={(e) =>
+                                                setFilters((f) => ({ ...f, startDate: new Date(e.target.value) }))
+                                            }
+                                        />
+                                    </Box>
+                                </Stack>
+                                <Stack>
+                                    <label>End Date</label>
+                                    <Box
+                                        border="1px solid"
+                                        borderColor="gray.200"
+                                        rounded="md"
+                                        px={3}
+                                        py={2}
+                                    >
+                                        <Input
+                                            type="date"
+                                            border="none"
+                                            padding="0"
+                                            value={filters.endDate?.toISOString().split('T')[0] || ''}
+                                            onChange={(e) =>
+                                                setFilters((f) => ({ ...f, startDate: new Date(e.target.value) }))
+                                            }
+                                        />
+                                    </Box>
+                                </Stack>
+                                <Stack>
+                                    <label>Category</label>
+                                    <Select
+                                        placeholder="All"
+                                        value={filters.category}
+                                        onChange={(e) => setFilters((f) => ({ ...f, category: e.target.value }))}
+                                    >
+                                        {categories?.map((cat) => (
+                                            <option key={cat.id} value={cat.name}>
+                                                {cat.name}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                </Stack>
+                                <Stack>
+                                    <label>Type</label>
+                                    <Select
+                                        placeholder="All"
+                                        value={filters.type}
+                                        onChange={(e) => setFilters((f) => ({ ...f, type: e.target.value } as ITransactionsFilter))}
+                                    >
+                                        <option value="income">Income</option>
+                                        <option value="expense">Expense</option>
+                                    </Select>
+                                </Stack>
+                            </Stack>
+                        </MenuList>
+                    </Menu>
+
                     <Button onClick={() => navigate('/transactions/add')} size='sm' leftIcon={<AddIcon />} colorScheme='teal' variant='solid'>
                         Create New
                     </Button>

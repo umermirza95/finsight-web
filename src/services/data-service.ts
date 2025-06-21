@@ -1,5 +1,6 @@
 import { ICategory } from "../interface/ICategory";
 import { ITransaction } from "../interface/ITransaction";
+import { ITransactionsFilter } from "../pages/TransactionPage";
 import { DELETE, GET, PUT } from "../utils/data-fetcher";
 import { getYearlySpan } from "../utils/helpers";
 
@@ -14,25 +15,38 @@ export async function createTransaction(payload: any): Promise<ITransaction> {
     return data.transaction;
 }
 
-export async function fetchTransactions(from: Date, to: Date): Promise<ITransaction[]> {
-    const data = await GET(`/transactions?from=${from.toISOString()}&to=${to.toISOString()}`)
+export async function fetchTransactions(filters?: ITransactionsFilter): Promise<ITransaction[]> {
+    let url = `/transactions?`
+    if (!!filters?.startDate) {
+        url = url + `from=${filters.startDate}`
+    }
+    if (!!filters?.endDate) {
+        url = url + `&to=${filters.endDate}`
+    }
+    if (!!filters?.category) {
+        url = url + `&category=${filters.category}`
+    }
+    if (!!filters?.type) {
+        url = url + `&type=${filters.type}`
+    }
+    const data = await GET(url)
     return data.transactions.map((transaction: any) => {
         transaction.date = new Date(transaction.date)
         return transaction
     }) as ITransaction[]
 }
 
-export async function fetchTransactionById(id:string): Promise<ITransaction> {
+export async function fetchTransactionById(id: string): Promise<ITransaction> {
     const data = await GET(`/transaction/${id}`)
     return data.transaction as ITransaction;
 }
 
 export async function fetchYearlyTransactions(year: number): Promise<ITransaction[]> {
     const { from, to } = getYearlySpan(year)
-    return await fetchTransactions(from, to);
+    return await fetchTransactions({ startDate: from, endDate: to });
 }
 
-export async function deleteTransaction(id:string){
+export async function deleteTransaction(id: string) {
     return await DELETE(`/transaction/${id}`);
 }
 
