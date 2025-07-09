@@ -23,8 +23,8 @@ export async function fetchTransactions(filters?: ITransactionsFilter): Promise<
     if (!!filters?.endDate) {
         url = url + `&to=${filters.endDate}`
     }
-    if (!!filters?.category) {
-        url = url + `&category=${filters.category}`
+    if (!!filters?.categoryId) {
+        url = url + `&categoryId=${filters.categoryId}`
     }
     if (!!filters?.type) {
         url = url + `&type=${filters.type}`
