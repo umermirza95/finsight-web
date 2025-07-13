@@ -1,7 +1,7 @@
 import { FC, useContext, useEffect, useState } from "react";
 import { Box, Card, CardBody, Center, Checkbox, Grid, GridItem, Heading, HStack, Radio, RadioGroup, Select, Stack, Stat, StatArrow, StatHelpText, StatLabel, StatNumber, VStack } from "@chakra-ui/react";
 import { fetchTransactions, fetchYearlyTransactions, getCategories } from "../services/data-service";
-import Chart from "react-google-charts";
+import Chart, { GoogleChartWrapper } from "react-google-charts";
 import { ITransaction, TransactionType } from "../interface/ITransaction";
 import { getIncomeAndExpenseGroupedByMonth, getMonthlyAverageIncomeAndExpense, getTotal, getTransactionsGroupedByCategory } from "../services/transaction-services";
 import { ThemeContext } from "../contexts/theme-context";
@@ -10,19 +10,35 @@ import { CalendarIcon } from "@chakra-ui/icons";
 import { amountFormatter } from "../utils/helpers";
 import PieChart, { AggregationType } from "../components/PieChart";
 import { useCategories } from "../hooks/useCategories";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard: FC = () => {
     const { theme } = useContext(ThemeContext);
     const [transactionType, setTransactionType] = useState<TransactionType>("expense")
     const [aggregationType, setAggregationType] = useState<AggregationType>("sum")
-    const [expandSubCategories, setExpandSubCategories]=useState<boolean>(false);
+    const [expandSubCategories, setExpandSubCategories] = useState<boolean>(false);
     const [year, setYear] = useState(new Date().getFullYear());
+    const navigate = useNavigate();
     const { categories } = useCategories();
     const { data: transactions } = useQuery({
         queryKey: [year],
         queryFn: () => fetchYearlyTransactions(year),
         enabled: !!categories
     })
+    const transactionGroup = getIncomeAndExpenseGroupedByMonth(transactions ?? []);
+
+    const handleBarClick = ({ chartWrapper }: { chartWrapper: GoogleChartWrapper }) => {
+        const chart = chartWrapper.getChart();
+        const selection = chart.getSelection();
+        if (selection[0]?.row === undefined) return;
+        const month = selection[0].row as number;
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month +1, 0);
+
+        const start = firstDay.toISOString().slice(0, 10); // "YYYY-MM-DD"
+        const end = lastDay.toISOString().slice(0, 10);
+        navigate(`/transactions?startDate=${start}&endDate=${end}`);
+    };
 
 
     return (
@@ -38,9 +54,15 @@ const Dashboard: FC = () => {
                     <Card>
                         <CardBody>
                             <Chart
+                                chartEvents={[
+                                    {
+                                        eventName: "select",
+                                        callback: handleBarClick,
+                                    },
+                                ]}
                                 chartType="Bar"
                                 height="400px"
-                                data={getIncomeAndExpenseGroupedByMonth(transactions ?? [])}
+                                data={transactionGroup}
                                 options={{
                                     legend: {
                                         position: 'none'
@@ -73,7 +95,7 @@ const Dashboard: FC = () => {
                                                     <Radio value='average'>Average</Radio>
                                                 </Stack>
                                             </RadioGroup>
-                                            <Checkbox checked={expandSubCategories} onChange={(value)=> setExpandSubCategories(value.target.value === "true" ? true : false)}>Expand Sub Categories</Checkbox>
+                                            <Checkbox checked={expandSubCategories} onChange={(value) => setExpandSubCategories(value.target.value === "true" ? true : false)}>Expand Sub Categories</Checkbox>
                                         </VStack>
                                     </Center>
                                 </GridItem>
