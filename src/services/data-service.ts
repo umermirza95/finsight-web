@@ -1,7 +1,7 @@
 import { ICategory } from "../interface/ICategory";
 import { ITransaction } from "../interface/ITransaction";
 import { ITransactionsFilter } from "../pages/TransactionPage";
-import { DELETE, GET, PUT } from "../utils/data-fetcher";
+import { DELETE, GET, POST, PUT } from "../utils/data-fetcher";
 import { getYearlySpan } from "../utils/helpers";
 
 export async function getCategories(): Promise<ICategory[]> {
@@ -11,17 +11,17 @@ export async function getCategories(): Promise<ICategory[]> {
 
 export async function createTransaction(payload: any): Promise<ITransaction> {
     payload.subCategoryId = !payload.subCategoryId ? undefined : payload.subCategoryId
-    const data = await PUT('/transaction', payload)
+    const data = await POST('/transactions', payload)
     return data.transaction;
 }
 
 export async function fetchTransactions(filters?: ITransactionsFilter): Promise<ITransaction[]> {
     let url = `/transactions?`
     if (!!filters?.startDate) {
-        url = url + `from=${filters.startDate}`
+        url = url + `from=${filters.startDate.toISOString().split('T')[0]}`
     }
     if (!!filters?.endDate) {
-        url = url + `&to=${filters.endDate}`
+        url = url + `&to=${filters.endDate.toISOString().split('T')[0]}`
     }
     if (!!filters?.categoryId) {
         url = url + `&categoryId=${filters.categoryId}`
