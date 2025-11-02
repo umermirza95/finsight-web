@@ -82,9 +82,22 @@ async function getToken(): Promise<string> {
     if (token) {
         return token;
     }
-    const IdToken = await getAuth().currentUser?.getIdToken();
-    if (!IdToken) {
-        throw Error("user not logged in");
+    const url = `${process.env.REACT_APP_API_URL}/auth/login`;
+    console.log(`POST ${url}`)
+    const request = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({
+            email: process.env.REACT_APP_EMAIL,
+            password: process.env.REACT_APP_PASSWORD
+        }),
+        headers: {
+            'content-type': 'application/json'
+        }
+    })
+    const response = await request.text()
+    console.log(response)
+    if (request.status >= 400) {
+        throw Error(response);
     }
-    return IdToken as string;
+    return JSON.parse(response).token
 }
