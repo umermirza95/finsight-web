@@ -37,7 +37,7 @@ export async function fetchTransactions(filters?: ITransactionsFilter): Promise<
 }
 
 export async function fetchTransactionById(id: string): Promise<ITransaction> {
-    const data = await GET(`/transaction/${id}`)
+    const data = await GET(`/transactions/${id}`)
     return data.transaction as ITransaction;
 }
 
@@ -47,6 +47,6 @@ export async function fetchYearlyTransactions(year: number): Promise<ITransactio
 }
 
 export async function deleteTransaction(id: string) {
-    return await DELETE(`/transaction/${id}`);
+    return await DELETE(`/transactions/${id}`);
 }
 
