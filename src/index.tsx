@@ -20,34 +20,27 @@ initializeApp({
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN
 });
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <App />,
+      children: [
+        { path: "/", Component: Dashboard },
+        { path: "/transactions", Component: TransactionPage },
+        { path: "/transactions/add", Component: NewTransactionPage },
+        { path: "/transactions/:id?", Component: NewTransactionPage }
+      ]
+    },
+    { path: "/login", element: <Login /> }
+  ],
   {
-    path: "/",
-    element: <App />,
-    children: [
-      {
-        path: "/",
-        Component: Dashboard
-      },
-      {
-        path: "/transactions",
-        Component: TransactionPage
-      },
-      {
-        path: "/transactions/add",
-        Component: NewTransactionPage
-      },
-      {
-        path: "/transactions/:id?",
-        Component: NewTransactionPage
-      }
-    ]
-  },
-  {
-    path: "/login",
-    element: <Login />
+    basename: "/app"
   }
-]);
+);
+
+
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
