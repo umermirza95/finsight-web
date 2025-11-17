@@ -8,7 +8,6 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import App from './App';
-import { initializeApp } from 'firebase/app';
 import Login from './pages/Login';
 import TransactionPage from './pages/TransactionPage';
 import NewTransactionPage from './pages/NewTransactionPage';
@@ -16,10 +15,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Dashboard from './pages/Dashboard';
 import { ThemeContextProvider } from './contexts/theme-context';
 
-initializeApp({
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN
-});
+
 const router = createBrowserRouter(
   [
     {

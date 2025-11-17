@@ -4,7 +4,6 @@ import { Drawer, DrawerContent, DrawerOverlay, Grid, GridItem, Heading, HStack, 
 import { pathNameToHeading } from './utils/helpers';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import FSDrawer from './components/FSDrawer';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const App: React.FC = () => {
 	const [isOpen, setIsOpen] = useState(false)
@@ -12,16 +11,7 @@ const App: React.FC = () => {
 	const navigate = useNavigate();
 	const { pathname } = useLocation()
 
-	useEffect(() => {
-		onAuthStateChanged(getAuth(), (user) => {
-			if (!user) {
-				navigate("/login");
-			}
-			else {
-				setInit(true);
-			}
-		})
-	}, [])
+	
 
 
 	return (
