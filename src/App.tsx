@@ -39,7 +39,7 @@ const App: React.FC = () => {
 				</HStack>
 			</GridItem>
 			<GridItem overflowY='scroll' px='2' py='4' rowSpan={9} colSpan={[12, 12, 12, 10]}>
-				{authInit && <Outlet />}
+				<Outlet />
 			</GridItem>
 			<Drawer
 				isOpen={isOpen}
