@@ -47,6 +47,7 @@ const Dashboard: FC = () => {
                 <Select variant='filled' w='100px' fontWeight={700} icon={<CalendarIcon />} mb={4} value={year} onChange={(event) => setYear(parseInt(event.target.value))}>
                     <option value={2024}>2024</option>
                     <option value={2025}>2025</option>
+                    <option value={2025}>2026</option>
                 </Select>
             </HStack>
             <Grid gap={4} templateColumns='repeat(12, 1fr)'>
